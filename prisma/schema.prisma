@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int                @id @default(autoincrement())
+  name          String
+  password      String
+  email         String             @unique
+  posts         Post[]
+  comments      Comment[]
+  conversations UserConversation[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Message   Message[]
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  upLikes   Int       @default(0)
+  downLikes Int       @default(0)
+  title     String
+  content   String?
+  imgUrl    String?
+  comments  Comment[]
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  likes     Int      @default(0)
+  userId    Int
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserConversation {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  conversationId Int
+  user           User         @relation(fields: [userId], references: [id])
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  createdAt      DateTime     @default(now())
+
+  @@unique([userId, conversationId])
+}
+
+model Conversation {
+  id        Int                @id @default(autoincrement())
+  users     UserConversation[]
+  messages  Message[]
+  createdAt DateTime           @default(now())
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       Int
+  sender         User         @relation(fields: [senderId], references: [id])
+  timestamp      DateTime     @default(now())
+}
