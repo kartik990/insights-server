@@ -9,6 +9,7 @@ import postRouter from "./routes/postRoutes";
 import socketHandler from "./socketHandlers";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth";
+import chatRouter from "./routes/chatRoutes";
 
 dotenv.config();
 
@@ -27,13 +28,15 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "*",
-    credentials: true,
+    // credentials: true,
   })
 );
 
 app.use("/api/auth", authRouter);
 
 app.use("/api/user", userRouter);
+
+app.use("/api/chat-room", chatRouter);
 
 app.use("/api/post", postRouter);
 

@@ -1,16 +1,29 @@
 import { Socket } from "socket.io";
 
 class UserManager {
+  private static instance: UserManager;
+
   onlineUsers: string[];
   busyUsers: string[];
   emailToSocket: { [key: string]: string };
   socketToEmail: { [key: string]: string };
 
-  constructor() {
+  private constructor() {
     this.onlineUsers = [];
     this.busyUsers = [];
     this.emailToSocket = {};
     this.socketToEmail = {};
+  }
+
+  static getInstance() {
+    if (UserManager.instance) {
+      return UserManager.instance;
+    }
+
+    const userManager = new UserManager();
+    UserManager.instance = userManager;
+
+    return userManager;
   }
 
   getOnlineUsers() {
@@ -29,6 +42,7 @@ class UserManager {
     this.onlineUsers.push(email);
     this.emailToSocket[email] = socketId;
     this.socketToEmail[socketId] = email;
+
     return true;
   }
 
@@ -38,12 +52,10 @@ class UserManager {
     delete this.socketToEmail[socketId];
     this.onlineUsers = this.onlineUsers.filter((e) => e != email);
 
-    console.log(this.onlineUsers);
-    console.log(this.emailToSocket);
-    console.log(this.socketToEmail);
-
     return true;
   }
 }
 
-export default UserManager;
+const userManager = UserManager.getInstance();
+
+export default userManager;

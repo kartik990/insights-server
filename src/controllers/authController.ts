@@ -27,16 +27,21 @@ const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "invalid credentials" });
     }
 
-    const token = jwt.sign({ id: 7, role: "captain" }, "YOUR_SECRET_KEY");
+    const token = jwt.sign({ id: user.id }, "YOUR_SECRET_KEY");
 
-    return (
-      // .cookie("access_token", token, {
-      //   httpOnly: true,
-      //   sameSite: "none",
-      //   secure: process.env.NODE_ENV === "production",
-      // })
-      res.status(200).json({ name: user.name, email: user.email })
-    );
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: process.env.NODE_ENV === "production",
+      })
+      .status(200)
+      .json({
+        userId: user.id,
+        name: user.name,
+        email: user.email,
+        profile: user.profileUrl,
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Error fetching users" });
@@ -59,16 +64,19 @@ const signUp = async (req: Request, res: Response) => {
       },
     });
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
+    // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
 
-    // .cookie("access_token", token, {
-    //   httpOnly: true,
-    //   sameSite: "none",
-    //   secure: process.env.NODE_ENV === "production",
-    // })
-    res.json({ name: user.name, email: user.email });
+    // res
+    //   .cookie("access_token", token, {
+    //     httpOnly: true,
+    //     sameSite: "none",
+    //     secure: process.env.NODE_ENV === "production",
+    //   })
+    //   .json({ name: user.name, email: user.email });
 
-    res.status(201).json({ name: user.name, email: user.email });
+    res
+      .status(201)
+      .json({ userId: user.id, name: user.name, email: user.email });
   } catch (error) {
     res.status(500).json({ message: "Error fetching users" });
   }

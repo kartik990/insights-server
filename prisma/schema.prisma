@@ -8,37 +8,51 @@ datasource db {
 }
 
 model User {
-  id            Int                @id @default(autoincrement())
-  name          String
-  password      String
-  email         String             @unique
-  posts         Post[]
-  comments      Comment[]
-  conversations UserConversation[]
+  id         Int     @id @default(autoincrement())
+  name       String
+  email      String  @unique
+  password   String
+  about      String?
+  profileUrl String?
+  coverUrl   String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Message   Message[]
+  posts           Post[]
+  postInteraction PostInteraction[]
+  comments        Comment[]
+  conversations   UserConversation[]
+  Message         Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  upLikes   Int       @default(0)
-  downLikes Int       @default(0)
-  title     String
-  content   String?
-  imgUrl    String?
-  comments  Comment[]
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id               Int               @id @default(autoincrement())
+  title            String
+  content          String?
+  imgUrl           String[]
+  postInteractions PostInteraction[]
+  comments         Comment[]
+  userId           Int
+  user             User              @relation(fields: [userId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model PostInteraction {
+  id     Int     @id @default(autoincrement())
+  liked  Boolean // True if liked, false if unliked
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int
+  post   Post    @relation(fields: [postId], references: [id])
+  postId Int
+
+  @@unique([userId, postId])
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
   text      String
-  likes     Int      @default(0)
   userId    Int
   postId    Int
   user      User     @relation(fields: [userId], references: [id])
@@ -63,6 +77,7 @@ model Conversation {
   users     UserConversation[]
   messages  Message[]
   createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now())
 }
 
 model Message {
@@ -72,5 +87,5 @@ model Message {
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   senderId       Int
   sender         User         @relation(fields: [senderId], references: [id])
-  timestamp      DateTime     @default(now())
+  createdAt      DateTime     @default(now())
 }
