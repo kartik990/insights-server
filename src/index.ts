@@ -42,6 +42,6 @@ app.use("/api/post", postRouter);
 
 io.on("connection", socketHandler);
 
-httpServer.listen(8000, () => {
+httpServer.listen(process.env.PORT, () => {
   console.log("------Server listening on port :8000---------");
 });
