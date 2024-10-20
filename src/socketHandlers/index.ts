@@ -42,6 +42,12 @@ const socketHandler = (socket: Socket) => {
     );
   });
 
+  socket.on(socketEvents.CALL_DISCONNECT, (data) => {
+    io.to(userManager.emailToSocket[data.email]).emit(
+      socketEvents.CALL_DISCONNECT
+    );
+  });
+
   socket.on("disconnect", () => {
     io.emit(socketEvents.UPDATE_ONLINE_USERS, {
       remove: userManager.socketToEmail[socket.id],
