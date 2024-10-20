@@ -11,7 +11,7 @@ const func = async () => {
     },
   });
 
-  const res = await prisma.user.findMany({});
+  await prisma.user.findMany({});
 };
 
 func();
