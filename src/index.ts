@@ -41,6 +41,8 @@ app.use("/api/chat-room", chatRouter);
 app.use("/api/post", postRouter);
 
 app.get("/health-check", (_, res) => {
+  console.log("health check", new Date().getTime());
+
   return res.send({
     message: "alive and fine",
     timeStamp: new Date().getTime(),
