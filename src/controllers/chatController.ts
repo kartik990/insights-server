@@ -6,7 +6,6 @@ const prisma = getPrismaClient();
 
 const createChatRoom = async (req: Request, res: Response) => {
   const { email1, email2 } = req.body;
-  console.log(req.body);
 
   try {
     const users = await prisma.user.findMany({
@@ -15,8 +14,7 @@ const createChatRoom = async (req: Request, res: Response) => {
       },
     });
 
-    const cc = await createConversation(users[0].id, users[1].id);
-    console.log(cc);
+    await createConversation(users[0].id, users[1].id);
 
     res.json({ message: "created" });
   } catch (err) {
@@ -66,7 +64,6 @@ const getOldMessages = async (req: Request, res: Response) => {
   const conversationId = req.params.id;
   const { page, size }: { page?: number; size?: number } = req.query;
 
-  console.log("there", conversationId, req.query);
   try {
     const conversation = await prisma.conversation.findUnique({
       where: {
@@ -92,7 +89,6 @@ const getOldMessages = async (req: Request, res: Response) => {
       },
     });
 
-    console.log(conversation);
     res.json({
       metaData: {
         page: page || 1,

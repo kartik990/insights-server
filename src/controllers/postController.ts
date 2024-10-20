@@ -61,7 +61,6 @@ const createPost = async (req: Request, res: Response) => {
       },
     });
 
-    console.log(post);
     res.status(201).json({ data: post });
   } catch (err) {
     console.log(err);
@@ -71,14 +70,12 @@ const createPost = async (req: Request, res: Response) => {
 
 const updatePost = async (req: Request, res: Response) => {
   const id = req.params.id;
-  console.log(req.body);
 
   try {
     const post = await prisma.post.update({
       where: { id: +id },
       data: req.body,
     });
-    console.log(post);
     res.status(204).json({ data: post });
   } catch (err) {
     console.log(err);
@@ -134,8 +131,6 @@ const addComment = async (req: Request, res: Response) => {
     comment: text,
   } = req.body as { postId: string; userId: string; comment: string };
 
-  console.log(req.body);
-
   try {
     const comment = await prisma.comment.create({
       data: {
@@ -153,7 +148,6 @@ const addComment = async (req: Request, res: Response) => {
       },
     });
 
-    console.log(comment);
     res.status(201).json({ success: true });
   } catch (err) {
     console.log(err);

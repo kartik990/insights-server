@@ -15,8 +15,6 @@ const login = async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findFirst({ where: { email: email } });
 
-    console.log("-----log in--");
-
     if (!user) {
       return res.status(400).json({ message: "invalid credentials" });
     }
@@ -51,8 +49,6 @@ const login = async (req: Request, res: Response) => {
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
-
-    console.log("-------hit----");
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

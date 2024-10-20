@@ -12,8 +12,6 @@ export const chatHandler = async (data: {
   const socketId = userManager.emailToSocket[data.toEmail];
   const socketId2 = userManager.emailToSocket[data.fromEmail];
 
-  console.log(data);
-
   io.to(socketId).to(socketId2).emit(socketEvents.CHAT_MESSAGE, {
     message,
     fromEmail,
