@@ -39,6 +39,8 @@ class UserManager {
   }
 
   addUserToOnline(email: string, socketId: Socket["id"]) {
+    if (this.onlineUsers.includes(email)) return true;
+
     this.onlineUsers.push(email);
     this.emailToSocket[email] = socketId;
     this.socketToEmail[socketId] = email;

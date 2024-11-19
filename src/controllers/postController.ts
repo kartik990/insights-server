@@ -22,6 +22,9 @@ const getPosts = async (_: Request, res: Response) => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     res.json(posts);
   } catch (error) {
